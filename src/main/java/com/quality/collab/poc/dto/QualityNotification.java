@@ -12,18 +12,19 @@ import com.quality.collab.poc.datatable.enums.FieldType;
 import com.quality.collab.poc.searchproviders.SearchProvider;
 
 @DataTable(name = "QualityNotification")
-//@ViewDropdownAction(props = @ViewDropdownAction.Props(
-//        allowCreate = true,
-//        createViewUrl = "http://localhost:8080/data_table/new_view?key=<table_id>",
-//        editViewUrl = "/data_table/edit_view",
-//        recordExistsUrl = "/data_table/favorite_count?key=<table_id>",
-//        selectOptions = {
-//                @ViewDropdownAction.SelectOption(id = "All", name = "{notification.view.all}"),
-//                @ViewDropdownAction.SelectOption(id="limited", name= "{notification.view.limited}")
-//        }
-//))
+@ViewDropdownAction(props = @ViewDropdownAction.Props(
+        allowCreate = false,
+        createViewUrl = "http://localhost:8080/data_table/new_view?key=<table_id>",
+        editViewUrl = "/data_table/edit_view",
+        recordExistsUrl = "/data_table/favorite_count?key=<table_id>",
+        selectOptions = {
+                @ViewDropdownAction.SelectOption(id = "All", name = "{notification.view.all}"),
+                @ViewDropdownAction.SelectOption(id="limited", name= "{notification.view.limited}")
+        }
+))
 @SimpleSearch
 @AdvancedSearch(defaultFilterBy = "criticality")
+
 public class QualityNotification {
 
     @Column(label = "{notification.id}", align = "center", sortable = true)
@@ -40,7 +41,11 @@ public class QualityNotification {
                                                @Option(id = "PACKAGING", name = "Packaging"),
                                                @Option(id = "CUSTOMER_COMPLAINT", name = "Customer Complaint")
                                        }
-                                    )
+                                    ),
+                                       @Value(
+                                               label = "Expand Child",
+                                               fieldType = FieldType.CHECKBOX
+                                       )
                                })
     }
     )
@@ -56,6 +61,9 @@ public class QualityNotification {
     private Integer orderNumber;
     private Integer batchNo;
     @Column(label = "{notification.material}", align = "center", sortable = true)
+    @AdvancedSearch.Field(label = "{notification.material}", clauseFieldType = FieldType.CHECKBOX,
+    clauses = { @Clause( id = "contains", name = "{search.clause.contains}")}
+    )
     private String material;
     private String serialNumber;
     @Column(label = "{notification.type}", align = "center", sortable = true)
